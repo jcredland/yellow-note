@@ -37,6 +37,7 @@ public:
 		editor.setColour(TextEditor::ColourIds::backgroundColourId, Colours::transparentWhite); 
 
 		editor.setMultiLine(true, true); 
+		editor.setReturnKeyStartsNewLine(true); 
 
 		editor.setLookAndFeel(&lafTextEditor); 
 		editor.addListener(this); 
