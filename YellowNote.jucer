@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="SyBWhw" name="YellowNote" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="com.yourcompany.YellowNote" includeBinaryInAppConfig="1"
+              jucerVersion="3.2.0">
+  <MAINGROUP id="WHOFll" name="YellowNote">
+    <GROUP id="{6AF3A72A-8033-0A36-7695-B332CDD6723C}" name="Source">
+      <FILE id="JdMF9Z" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2015 targetFolder="Builds/VisualStudio2015">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="YellowNote"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="YellowNote"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_events" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_video" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_opengl" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../big-hit/corelib/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../big-hit/corelib/juce/modules"/>
+      </MODULEPATHS>
+    </VS2015>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
