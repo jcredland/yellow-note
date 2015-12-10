@@ -1,6 +1,17 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+class HiddenResizingCorner
+	:
+	public ResizableCornerComponent
+{
+public:
+	HiddenResizingCorner(Component * componentToResize) :
+	ResizableCornerComponent(componentToResize, nullptr)
+	{}
+	void paint(Graphics & g) override {}
+};
+
 class YellowNote
 	:
 	public Component,
@@ -37,6 +48,12 @@ public:
 		addAndMakeVisible(editor); 
 
 		startTimer(3000);
+	}
+
+	~YellowNote()
+	{
+		/* Better save on quit as well as every 3 seconds */
+		propertiesFile->saveIfNeeded();
 	}
 
 private:
@@ -81,7 +98,6 @@ private:
 		propertiesFile->saveIfNeeded();
 	}
 
-
 	ComponentDragger dragger; 
 	TextEditor editor;
 	ScopedPointer<PropertiesFile> propertiesFile;
@@ -96,11 +112,13 @@ class MainWindow
 public:
 	MainWindow()
 		:
-		TopLevelWindow("Yellow Note", true)
+		TopLevelWindow("Yellow Note", true),
+		resizingCorner(this)
 	{
 		Component::setVisible(true); 
 		centreWithSize(200, 200); 
 		addAndMakeVisible(yellowNote);
+		addAndMakeVisible(resizingCorner); 
 		setOpaque(false);
 		setAlwaysOnTop(true);
 	}
@@ -109,6 +127,7 @@ public:
 	{
 		TopLevelWindow::resized();
 		yellowNote.setBounds(getLocalBounds()); 
+		resizingCorner.setBounds(getWidth() - 15, getHeight() - 15, 15, 15);
 	}
 
 	void userTriedToCloseWindow() override
@@ -117,6 +136,7 @@ public:
 	}
 
 	YellowNote yellowNote;
+	HiddenResizingCorner resizingCorner;
 };
 //==============================================================================
 class YellowNoteApplication  : public JUCEApplication
