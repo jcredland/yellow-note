@@ -1,7 +1,22 @@
 
+/**
+ * Here is a super-simple JUCE project.  It's a yellow sticky note application. 
+ *
+ * It only shows ONE note.  But that's all you need right? :) 
+ * 
+ * It's interesting because it shows off a bunch of features including the
+ * FontAwesome embeddeding, non-regular window sizes, the ComponentAnimator,
+ * resizing, DIY TopLevelWindows and more.
+ *
+ * And it's short enough that you can read it easily, and actually quite
+ * useful.  Especially so on Windows where Microsoft's default application 
+ * has that horrible font!
+ */
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FontAwesome.h"
 
+/** A button showing a single icon from the FontAwesome.h/cpp embedded icon
+ * class.  See fontawesome on github for more information. */
 class FontAwesomeButton
 :
 public Button
@@ -17,6 +32,9 @@ private:
     int iconCode;
 };
 
+/**
+ * Lets you close the window and pin it on top.  
+ */
 class TitleBar
 :
 public Component,
@@ -47,9 +65,17 @@ public:
         auto area = getLocalBounds().withWidth(h);
         close.setBounds(area);
         pinOnTop.setBounds(area.withX(getLocalBounds().getWidth() - h));
-        dim();
+
+        /* The call to dim() has to go here, as we want to start with the
+         * buttons showing and then fade them out to make it obvious they
+         * exist.  But if we put this in the constructor it's called with
+         * getBounds() == {0, 0, 0, 0} and then the later call to
+         * TitleBar::setSize() doesn't work properly!
+         */
+        dim(); 
     }
     void mouseEnter(const MouseEvent & e) override {
+        /** Restore the buttons so they are very visible. */
         Desktop::getInstance().getAnimator().animateComponent(this, getBounds(), 1.0f, 500, false, 0.1, 0.1);
     }
     void mouseExit(const MouseEvent & e) override {
@@ -66,6 +92,7 @@ private:
     void updatePinOnTop() {
         owner.setAlwaysOnTop(pinOnTop.getToggleState());
     }
+    /** Fade out the buttons to close to transparent. */
     void dim() {
         Desktop::getInstance().getAnimator().animateComponent(this, getBounds(), 0.1f, 500, false, 0.1, 0.1);
     }
@@ -74,6 +101,11 @@ private:
     FontAwesomeButton pinOnTop;
 };
 
+/**
+ * Allows the window to be resized using the bottom right corner, 
+ * but hides the usual resizing icon so we don't spoil the nice
+ * lines of the rounded window! 
+ */ 
 class HiddenResizingCorner
 	:
 	public ResizableCornerComponent
