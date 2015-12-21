@@ -1,5 +1,78 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "FontAwesome.h"
+
+class FontAwesomeButton
+:
+public Button
+{
+public:
+    FontAwesomeButton(int iconCode_) : Button("button"), iconCode(iconCode_) {}
+    void paintButton(Graphics & g, bool, bool)
+    {
+        g.setColour(getToggleState() ? Colours::black : Colours::darkgrey);
+        FontAwesomeIcons::drawIcon(g, iconCode, getLocalBounds().toFloat());
+    }
+private:
+    int iconCode;
+};
+
+class TitleBar
+:
+public Component,
+public Button::Listener
+{
+public:
+    TitleBar(TopLevelWindow & owner_)
+    :
+    owner(owner_),
+    close(FontAwesomeIcons::faClose),
+    pinOnTop(FontAwesomeIcons::faThumbTack)
+    {
+        setInterceptsMouseClicks(false, true);
+
+        addAndMakeVisible(close);
+        close.addListener(this);
+
+        addAndMakeVisible(pinOnTop);
+        pinOnTop.addListener(this);
+        pinOnTop.setClickingTogglesState(true);
+        pinOnTop.setToggleState(true, dontSendNotification);
+
+        addMouseListener(this, true);
+    }
+    void resized() override
+    {
+        auto h = getHeight();
+        auto area = getLocalBounds().withWidth(h);
+        close.setBounds(area);
+        pinOnTop.setBounds(area.withX(getLocalBounds().getWidth() - h));
+        dim();
+    }
+    void mouseEnter(const MouseEvent & e) override {
+        Desktop::getInstance().getAnimator().animateComponent(this, getBounds(), 1.0f, 500, false, 0.1, 0.1);
+    }
+    void mouseExit(const MouseEvent & e) override {
+        dim();
+    }
+    void buttonClicked(Button * b) override {
+        if (b == &close)
+            JUCEApplication::quit();
+
+        if (b == &pinOnTop)
+            updatePinOnTop();
+    }
+private:
+    void updatePinOnTop() {
+        owner.setAlwaysOnTop(pinOnTop.getToggleState());
+    }
+    void dim() {
+        Desktop::getInstance().getAnimator().animateComponent(this, getBounds(), 0.1f, 500, false, 0.1, 0.1);
+    }
+    TopLevelWindow & owner;
+    FontAwesomeButton close;
+    FontAwesomeButton pinOnTop;
+};
 
 class HiddenResizingCorner
 	:
@@ -7,9 +80,13 @@ class HiddenResizingCorner
 {
 public:
 	HiddenResizingCorner(Component * componentToResize) :
-	ResizableCornerComponent(componentToResize, nullptr)
-	{}
+	ResizableCornerComponent(componentToResize, &boundsConstrainer)
+	{
+        boundsConstrainer.setMinimumSize(50, 20);
+    }
 	void paint(Graphics & g) override {}
+private:
+    ComponentBoundsConstrainer boundsConstrainer;
 };
 
 class YellowNote
@@ -69,7 +146,7 @@ private:
 
 	void resized() override
 	{
-		editor.setBounds(getLocalBounds().reduced(10));
+		editor.setBounds(getLocalBounds().reduced(10).withTrimmedTop(5));
 	}
 
 	void mouseDown(const MouseEvent & e) override
@@ -114,20 +191,25 @@ public:
 	MainWindow()
 		:
 		TopLevelWindow("Yellow Note", true),
+        titleBar(*this),
 		resizingCorner(this)
 	{
-		Component::setVisible(true); 
-		centreWithSize(200, 200); 
-		addAndMakeVisible(yellowNote);
-		addAndMakeVisible(resizingCorner); 
+        setInterceptsMouseClicks(false, true);
+
 		setOpaque(false);
+		Component::setVisible(true); 
+		centreWithSize(200, 200);
+		addAndMakeVisible(yellowNote);
+        addAndMakeVisible(titleBar);
+		addAndMakeVisible(resizingCorner); 
 		setAlwaysOnTop(true);
 	}
 
 	void resized() override
 	{
 		TopLevelWindow::resized();
-		yellowNote.setBounds(getLocalBounds()); 
+        titleBar.setBounds(getLocalBounds().reduced(4, 5).withHeight(15));
+		yellowNote.setBounds(getLocalBounds());
 		resizingCorner.setBounds(getWidth() - 15, getHeight() - 15, 15, 15);
 	}
 
@@ -136,6 +218,7 @@ public:
 		JUCEApplication::getInstance()->quit();
 	}
 
+    TitleBar titleBar;
 	YellowNote yellowNote;
 	HiddenResizingCorner resizingCorner;
 };
